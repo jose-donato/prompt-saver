@@ -11,6 +11,7 @@ interface PromptStore {
 	prompts: Prompt[];
 	addPrompt: (prompt: Prompt) => void;
 	deletePrompt: (id: string) => void;
+	reorderPrompts: (sourceIndex: number, destinationIndex: number) => void;
 }
 
 export const usePromptStore = create<PromptStore>()(
@@ -19,12 +20,19 @@ export const usePromptStore = create<PromptStore>()(
 			prompts: [],
 			addPrompt: (prompt) =>
 				set((state) => ({
-					prompts: [...state.prompts, prompt],
+					prompts: [prompt, ...state.prompts],
 				})),
 			deletePrompt: (id) =>
 				set((state) => ({
 					prompts: state.prompts.filter((prompt) => prompt.id !== id),
 				})),
+			reorderPrompts: (sourceIndex, destinationIndex) =>
+				set((state) => {
+					const newPrompts = [...state.prompts];
+					const [movedPrompt] = newPrompts.splice(sourceIndex, 1);
+					newPrompts.splice(destinationIndex, 0, movedPrompt);
+					return { prompts: newPrompts };
+				}),
 		}),
 		{
 			name: "prompt-storage",
