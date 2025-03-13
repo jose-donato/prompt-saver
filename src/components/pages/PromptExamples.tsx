@@ -52,59 +52,52 @@ export function PromptExamples() {
 
 	return (
 		<div className="space-y-4">
-			<h2 className="text-xl font-bold">Example Prompts</h2>
-			<p className="text-sm text-muted-foreground">
-				Browse these example prompts and add them to your library with one
-				click.
-			</p>
-			<div className="space-y-4">
-				{examplePrompts.map((example) => (
-					<Card key={example.id}>
-						<CardHeader>
-							<CardTitle className="flex justify-between items-center">
-								{example.title}
+			{examplePrompts.map((example) => (
+				<Card key={example.id}>
+					<CardHeader>
+						<CardTitle className="flex justify-between items-center">
+							{example.title}
+							<Button
+								variant="outline"
+								size="sm"
+								onClick={() => handleAddToLibrary(example)}
+								className="flex items-center gap-1"
+							>
+								<Plus className="h-4 w-4" /> Add to Library
+							</Button>
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="space-y-2">
+							<pre className="text-sm font-sans whitespace-pre-wrap break-words">
+								{expandedId === example.id
+									? example.content
+									: example.content.length > 100
+										? `${example.content.substring(0, 100)}...`
+										: example.content}
+							</pre>
+							{example.content.length > 100 && (
 								<Button
-									variant="outline"
+									variant="ghost"
 									size="sm"
-									onClick={() => handleAddToLibrary(example)}
-									className="flex items-center gap-1"
+									onClick={() => toggleExpanded(example.id)}
+									className="flex items-center gap-1 text-xs w-full justify-center mt-2"
 								>
-									<Plus className="h-4 w-4" /> Add to Library
+									{expandedId === example.id ? (
+										<>
+											Show less <ChevronUp className="h-3 w-3" />
+										</>
+									) : (
+										<>
+											Show more <ChevronDown className="h-3 w-3" />
+										</>
+									)}
 								</Button>
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-2">
-								<pre className="text-sm font-sans whitespace-pre-wrap break-words">
-									{expandedId === example.id
-										? example.content
-										: example.content.length > 100
-											? `${example.content.substring(0, 100)}...`
-											: example.content}
-								</pre>
-								{example.content.length > 100 && (
-									<Button
-										variant="ghost"
-										size="sm"
-										onClick={() => toggleExpanded(example.id)}
-										className="flex items-center gap-1 text-xs w-full justify-center mt-2"
-									>
-										{expandedId === example.id ? (
-											<>
-												Show less <ChevronUp className="h-3 w-3" />
-											</>
-										) : (
-											<>
-												Show more <ChevronDown className="h-3 w-3" />
-											</>
-										)}
-									</Button>
-								)}
-							</div>
-						</CardContent>
-					</Card>
-				))}
-			</div>
+							)}
+						</div>
+					</CardContent>
+				</Card>
+			))}
 		</div>
 	);
 }
